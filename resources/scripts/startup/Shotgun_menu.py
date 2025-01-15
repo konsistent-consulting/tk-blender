@@ -60,12 +60,22 @@ PYSIDE2_MISSING_MESSAGE = (
     + "-" * 80
 )
 
+
+# Need to update with the shared path for PySide6
+sys.path.insert(0, "/Applications/Shotgun.app/Contents/Resources/Python3/lib/python3.11/site-packages")
+# sys.path.insert(0, "../../site-packages")
+
 try:
     from PySide2 import QtWidgets, QtCore
 
     PYSIDE2_IMPORTED = True
 except ModuleNotFoundError:
-    PYSIDE2_IMPORTED = False
+    try:
+        from PySide6 import QtWidgets, QtCore
+
+        PYSIDE2_IMPORTED = True
+    except ModuleNotFoundError:
+        PYSIDE2_IMPORTED = False
 
 
 class ShotgunConsoleLog(bpy.types.Operator):
