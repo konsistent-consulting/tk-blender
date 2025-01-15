@@ -47,8 +47,8 @@ class BlenderLauncher(SoftwareLauncher):
     # this is that we do not get a version number out of it.
     EXECUTABLE_TEMPLATES = {
         "darwin": [
-            "$BLENDER_BIN_DIR/Blender",
-            "/Library/Application Support/Blender.app/Contents/MacOS/Blender",
+            "$BLENDER_BIN_DIR/Blender {version}",
+            "/Applications/Blender{version}.app/Contents/MacOS/Blender",
         ],
         "win32": [
             "$BLENDER_BIN_DIR/blender.exe",
