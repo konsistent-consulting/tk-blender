@@ -10,17 +10,36 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-
 import os
 import sys
 
 import sgtk
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
 
-
 __author__ = "Diego Garcia Huerta"
 __contact__ = "https://www.linkedin.com/in/diegogh/"
 
+# We store the location of PySide2 or 6 module in the site-packages.path file.
+# This is so the resources/scripts/startup/Shotgun_menu.py can fine this
+# location when it loads the ShotGun menu within Blender. It needs to load
+# the same module, from the same location. If you install PySide6 in the users
+# site-packages folder, this seems to prevent ShotGun from launching.
+for path in sys.path:
+    if "site-packages" in path and any(os.path.isdir(os.path.join(path, pkg))
+                                      for pkg in ("PySide2", "PySide6")):
+        site_packages_path = path
+        break
+
+if site_packages_path:
+    path_file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "site-packages.path"
+    )
+    try:
+        with open(path_file, "w") as file:
+            file.write(site_packages_path)
+    except Exception as e:
+        print(f"Could not save site-packages.path: {e}")
 
 class BlenderLauncher(SoftwareLauncher):
     """
@@ -82,9 +101,7 @@ class BlenderLauncher(SoftwareLauncher):
         # Run the engine's startup file file when Blender starts up
         # by appending it to the env PYTHONPATH.
         scripts_path = os.path.join(self.disk_location, "resources", "scripts")
-
         startup_path = os.path.join(scripts_path, "startup", "Shotgun_menu.py")
-
         args += "-P " + startup_path
 
         required_env["BLENDER_USER_SCRIPTS"] = scripts_path
@@ -106,7 +123,6 @@ class BlenderLauncher(SoftwareLauncher):
         engine_startup_path = os.path.join(
             self.disk_location, "startup", "bootstrap.py"
         )
-
         required_env["SGTK_BLENDER_ENGINE_STARTUP"] = engine_startup_path
         required_env["SGTK_BLENDER_ENGINE_PYTHON"] = sys.executable.replace("\\", "/")
 
