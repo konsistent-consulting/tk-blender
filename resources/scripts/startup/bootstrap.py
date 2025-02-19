@@ -21,8 +21,6 @@ import sys
 import time
 import traceback
 
-import sgtk
-
 
 __author__ = "Diego Garcia Huerta"
 __contact__ = "https://www.linkedin.com/in/diegogh/"
@@ -31,13 +29,13 @@ __contact__ = "https://www.linkedin.com/in/diegogh/"
 ENGINE_NAME = "tk-blender"
 ENGINE_NICE_NAME = "Shotgun Blender Engine"
 
-logger = sgtk.LogManager.get_logger(__name__)
-
-
 SGTK_MODULE_PATH = os.environ.get("SGTK_MODULE_PATH")
 if SGTK_MODULE_PATH and SGTK_MODULE_PATH not in sys.path:
     sys.path.insert(0, SGTK_MODULE_PATH)
 
+import sgtk
+
+logger = sgtk.LogManager.get_logger(__name__)
 
 # logging functionality
 def display_message(level, msg):
